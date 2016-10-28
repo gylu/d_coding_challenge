@@ -82,10 +82,35 @@ class TestMatchAndGlue(unittest.TestCase):
         self.assertEqual(output,False)
 
     def test_one_all_inside(self):
-        seq2='012345678'
-        seq1='1234567'
+        seq1='012345678'
+        seq2='1234567'
         output=match_and_glue(seq1,seq2)
         self.assertEqual(output,False)
+
+    def test_one_side_inside2(self):
+        seq1='12345678'
+        seq2='012345678'
+        output=match_and_glue(seq1,seq2)
+        self.assertEqual(output,False)
+
+    def test_one_side_inside3(self):
+        seq2='12345678'
+        seq1='012345678'
+        output=match_and_glue(seq1,seq2)
+        self.assertEqual(output,False)
+
+    def test_one_side_inside4(self):
+        seq1='01234567'
+        seq2='012345678' #the end of this tries to match 5678 with 567, which fails, as expected
+        output=match_and_glue(seq1,seq2)
+        self.assertEqual(output,False)
+
+    def test_one_side_inside5(self):
+        seq2='01234567'
+        seq1='012345678' #the end of this tries to match 5678 with 567, which fails, as expected
+        output=match_and_glue(seq1,seq2)
+        self.assertEqual(output,False)
+
 
 if __name__ == '__main__':
     unittest.main()

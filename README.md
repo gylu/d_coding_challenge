@@ -11,6 +11,10 @@
 * There exists a unique way to reconstruct the entire chromosome from these reads by gluing together pairs of reads that overlap by more than half their length
 * No guarentee that adjacent entries in the input file will have overlaps
 * Sequences are different lengths
+* Assumptions:
+  * No two sequences will erroneously overlap with a third sequence. For example, the following is assumed to not ever happen: aabb, bbc, bbd (bbc and bbd are in contention)
+  * All subsequences in the input file will get used
+  
     ```
     Example input:
     `>Frag_56

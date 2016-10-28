@@ -21,7 +21,6 @@ def read_input(input_file):
     OUTPUT: name_list, seq_list 
     name_list has list of names of the sequences in the input file. seq_list has a list of the actual values
     """
-    print (input_file)
     allLines=''
     with open(input_file) as f:
         allLines=f.readlines()
@@ -48,7 +47,33 @@ def read_input(input_file):
 def match_and_glue(seq1,seq2):
     """
     INPUT: two sequences
-    OUTPUT: a glued output sequence. glue only occurs if more than half of one sequence overlaps with the other
+    OUTPUT: a glued output sequence. 
+    Glue only occurs if more than half of one sequence overlaps with the other, and there are additional new characters in the glued sequence
+    This function attempts to match on both sides (left or right):
+        1. It takes the shorter of the two sequences, halves it and adds a character (to satisfy the "more than half"), and the sees if that half-character is in the longer string (CPython's substring in string check uses Boyer-Moore, which is one of the fastest string search algorithms)
+        2. If this substring is in the longer string, see if the remainder of the substring also overlaps
+        3. If it is, perform the glue
+        
+        Example:
+        smaller_string = aabbcde
+        longer_string  = aaaaabbcd
+        1. more than half of aabbcdd = aabb
+            a) Is this more-than-half of inside the longer string?
+                Yes, as shown:
+                   aabb
+                aaaaabbcd
+        2. Is the remainder of the substring also there
+            a) remainder-of-longer-string: 
+                cd (length = 2)
+            b) reaminder of smaller string 
+                cde
+            c) reaminder of smaller string up to same length as remainder of longer-string
+                cd (length=2)
+        3. Perform the glue:
+               aabbcde
+            aaaaabbcd
+            -----------
+            aaaaabbcde
     """
     if len(seq1)<len(seq2):
         small_seq=seq1
@@ -65,19 +90,19 @@ def match_and_glue(seq1,seq2):
         remainder_other_seq=other_seq[head_index+len_substr::]
         len_remainder_other_seq=len(remainder_other_seq)
         remainder_substr=small_seq[len_substr:len_substr+len_remainder_other_seq] #this is the remainder of the string that fits with the remainder of the other sequence
-        print("remainder_other_seq0: ", remainder_other_seq)
-        print("remainder_substr0: ", remainder_substr)
+        #print("remainder_other_seq0: ", remainder_other_seq)
+        #print("remainder_substr0: ", remainder_substr)
         if (remainder_substr==remainder_other_seq):
             remainder_small_seq=small_seq[len_substr+len_remainder_other_seq::]
             temp=''.join([other_seq,remainder_small_seq])
-    elif substr_righthalf in other_seq:
+    elif substr_righthalf in other_seq: #same as above, except try matching the right side of the shorter string against the left side of the long string
         len_substr=len(substr_righthalf)
         head_index=other_seq.index(substr_righthalf)
         remainder_other_seq=other_seq[0:head_index]
         len_remainder_other_seq=len(remainder_other_seq)
         remainder_substr=small_seq[-len_substr-len_remainder_other_seq:-len_substr]
-        print("remainder_other_seq1: ", remainder_other_seq)
-        print("remainder_substr1 ", remainder_substr)
+        #print("remainder_other_seq1: ", remainder_other_seq)
+        #print("remainder_substr1 ", remainder_substr)
         if (remainder_substr==remainder_other_seq):
             remainder_small_seq=small_seq[0:-len_substr-len_remainder_other_seq]
             temp=''.join([remainder_small_seq,other_seq])
@@ -89,7 +114,6 @@ def main():
     input_file=args[1]
     # input_file='coding_challenge_data_set.txt'
     # input_file='example_easy_data_set.txt'
-    print("input_file:",input_file)
     name_list,seq_list=read_input(input_file)
 
     # myDict={}
@@ -100,12 +124,13 @@ def main():
 
     max_loops=len(seq_list) * (len(seq_list))/2
     count=0
-    index=0
+    loopsTotal=0
     while seq_list:
         seq=seq_list[count]
         result=match_and_glue(master,seq)
         count+=1
-        print(count)
+        loopsTotal+=1
+        print(loopsTotal)
         if result:
             count=0
             seq_list.remove(seq)

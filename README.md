@@ -44,15 +44,15 @@
 There are two problems here:
 
 1. String matching subproblem
-* Doing some googling shows that Boyer-Moore seems to be the fastest string search algorithm. Futher googling showed that Cpython already implements this.
+  * Doing some googling shows that Boyer-Moore seems to be the fastest string search algorithm. Futher googling showed that Cpython already implements this.
 
 2. All-pairs matching problem using 1.
-* Two ways of attacking the problem:
- * Form a growing master sequence and keep gluing sequences into it
- * Keep taking pairs and merging them (then only further merging with previously paired/merged), this won't work, because won't be able to determine whether it's 50% that matches or not
+  * Two ways of attacking the problem:
+    * Form a growing master sequence and keep gluing sequences into it
+    * Keep taking pairs and merging them (then only further merging with previously paired/merged), this won't work, because won't be able to determine whether it's 50% that matches or not
 
 
-# What my string matching function does:
+# What my `match_and_glue` function does:
 This function attempts to match on both sides (left or right):
 
 1. It takes the shorter of the two sequences, halves it and adds a character (to satisfy the "more than half"), and the sees if that half-character is in the longer string (CPython's substring in string check uses Boyer-Moore, which is one of the fastest string search algorithms)

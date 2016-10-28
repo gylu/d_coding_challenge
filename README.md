@@ -1,31 +1,5 @@
 # George's d_coding_challenge
 
-Example input:
-
-`>Frag_56
-`ATTAGACCTG
-`>Frag_57
-`CCTGCCGGAA
-`>Frag_58
-`AGACCTGCCG
-`>Frag_59
-`GCCGGAATAC
-
-Example output:
-ATTAGACCTGCCGGAATAC
-
-Example of how to piece together the output
-`Frag_56: ATTAGACCTG
-`Frag_57:       CCTGCCGGAA
-`Frag_58:    AGACCTGCCG
-`Frag_59:          GCCGGAATAC
-output:  ATTAGACCTGCCGGAATAC
-
-Building it in order
-`Frag_56: ATTAGACCTG
-`Frag_58:    AGACCTGCCG
-`Frag_57:       CCTGCCGGAA
-`Frag_59:          GCCGGAATAC
 
 
 Requirements:
@@ -37,11 +11,39 @@ Requirements:
 * No guarentee that adjacent entries in the input file will have overlaps
 * Sequences are different lengths
 
+	Example input:
+	`>Frag_56
+	`ATTAGACCTG
+	`>Frag_57
+	`CCTGCCGGAA
+	`>Frag_58
+	`AGACCTGCCG
+	`>Frag_59
+	`GCCGGAATAC
 
-Initial thoughts:
+	Example output:
+	ATTAGACCTGCCGGAATAC
+
+	Example of how to piece together the output
+	>Frag_56: ATTAGACCTG
+	>Frag_57:       CCTGCCGGAA
+	>Frag_58:    AGACCTGCCG
+	>Frag_59:          GCCGGAATAC
+
+	Building it in order
+	>Frag_56: ATTAGACCTG
+	>Frag_58:    AGACCTGCCG
+	>Frag_57:       CCTGCCGGAA
+	>Frag_59:          GCCGGAATAC
+	output:   ATTAGACCTGCCGGAATAC
+	
+# Initial thoughts:
+
 There are two problems here:
+
 1. String matching subproblem
 * Doing some googling shows that Boyer-Moore seems to be the fastest string search algorithm. Futher googling showed that Cpython already implements this.
+
 2. All-pairs matching problem using 1.
 * Two ways of attacking the problem:
  * Form a growing master sequence and keep gluing sequences into it
@@ -49,7 +51,7 @@ There are two problems here:
 
 
 * What my string matching function does:
-    This function attempts to match on both sides (left or right):
+ * This function attempts to match on both sides (left or right):
         1. It takes the shorter of the two sequences, halves it and adds a character (to satisfy the "more than half"), and the sees if that half-character is in the longer string (CPython's substring in string check uses Boyer-Moore, which is one of the fastest string search algorithms)
         2. If this substring is in the longer string, see if the remainder of the substring also overlaps
         3. If it is, perform the glue

@@ -100,12 +100,12 @@ longer_string  = aaaaabbcd
 
 # Thoughts on  Runtime
 
-Runtime is O(n`^`2*k). Where n is the total number of segments and k is average length of the segment. The n`^2 term comes from the all-pairs matching. The k comes from the Boyer-Moore string search. Perhaps the n`^2 can be avoided if substrings were hashed and looked up. But since it's at least half of a substring that will match another string (not exactly half), this means all possible substrings more than half would need to be hashed. That's potentially n*(k) hashes (or 5000, which is greater than n`^2, where n=50). There might be ways to transform the string to a frequency domain and/or cluster/group the segments by similarity, but that is a little too advanced for the scope of this challenge. So currently, it doesn't seem that the n`^2 term is avoidable. 
+Runtime is O(n`^`2*k). Where n is the total number of segments and k is average length of the segment. The n`^`2 term comes from the all-pairs matching. The k comes from the Boyer-Moore string search. Perhaps the n`^`2 can be avoided if substrings were hashed and looked up. But since it's at least half of a substring that will match another string (not exactly half), this means all possible substrings more than half would need to be hashed. That's potentially n*(k) hashes (or 5000, which is greater than n`^`2, where n=50). There might be ways to transform the string to a frequency domain and/or cluster/group the segments by similarity, but that is a little too advanced for the scope of this challenge. So currently, it doesn't seem that the n`^`2 term is avoidable. 
 
 
 # Explaination on other parts of the code
 
-* The read_input function reads the input file and concatenates lines and returns a list of sequences, it is called by the reconstruct function
-* The reconstruct function first calls the read_input funciton to get the list of sequences and then loops over the list of sequences in attempt to glue each sequence a growing master sequence. If there is a match and a glue is performed, the smaller sequence is removed from the list so it is not iterated against again, and the looping is restarted to find the next sequence that can be matched and glued to the mater sequence. The master sequence is initialized by taking one of the sequences in the list of sequences. 
-* unit_test.py current just tests the match_and_glue function
-* integrated_tests.py tests whole input and outputs. Most of the tests make sure that all the inputs are seen in the output, as what is expected. 
+* The `read_input` function reads the input file and concatenates lines and returns a list of sequences, it is called by the reconstruct function
+* The `reconstruct` function first calls the read_input funciton to get the list of sequences and then loops over the list of sequences in attempt to glue each sequence a growing master sequence. If there is a match and a glue is performed, the smaller sequence is removed from the list so it is not iterated against again, and the looping is restarted to find the next sequence that can be matched and glued to the mater sequence. The master sequence is initialized by taking one of the sequences in the list of sequences. 
+* `unit_test.py` currently just tests the match_and_glue function
+* `integrated_tests.py` tests whole input and outputs. Most of the tests make sure that all the inputs are seen in the output, as what is expected. 

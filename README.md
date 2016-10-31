@@ -61,17 +61,17 @@ There are two problems here:
 1. String matching subproblem (See my `match_and_glue` function in reconstruct.py and additional description below)
   * Googling shows that Boyer-Moore seems to be the standard for efficient string search algorithms. Futher googling showed that Cpython already implements a variant of this (Boyer–Moore–Horspool), which results in an average run-time of O(k), where k is the length of the string to be searched against. See https://news.ycombinator.com/item?id=1976275. And https://hg.python.org/cpython/file/tip/Objects/stringlib/fastsearch.h
 
-2. All-pairs matching problem using string matching described above (See my `reconstruct` function in reconstruct.py)
-  * Form a growing master sequence and keep gluing sequences into it
+2. All-pairs matching problem using string matching described above 
+  * Form a growing master sequence and keep gluing sequences into it (See my `reconstruct` function in reconstruct.py and description below)
 
 
 
 # What my `match_and_glue` function does
-This function attempts to match two sequences, on both sides (left or right):
+This function attempts to match two sequences on either sides (left or right):
 
-1. It takes one character more than half of the shorter of the two sequences (to satisfy the "more than half" condition) and then sees if this half is in the longer string (CPython's "substring in string" check uses Boyer-Moore, which is best case Ω(n/m), worst case O(mn))
-2. If this substring is in the nose section or tail section of the longer string, see if the remainder of the longer string also matches the substring. Only check the nose or tail section of the longer string is checked in order to save time. Nose and tail sizes are set to the length of the smaller substring. (It's pointless to check the middle of the longer substring to see if there are matches if a match doesn't result in growing the strings)
-3. If it does, perform the glue
+1. It takes one character more than half of the shorter of the two sequences (to satisfy the "more than half" condition) and then sees if this half is in the longer string (CPython's "substring in string" check uses Boyer–Moore–Horspool)
+2. If this substring is in the nose or tail section of the longer string, see if the remainder of the longer string also matches the substring. Only the nose or tail section of the longer string is checked in order to save time. The Nose and tail sizes that are checked against are set to the length of the smaller substring. (It's pointless to check the middle of the longer substring to see if there are matches if a match doesn't result in growing the strings)
+3. If the above conditions are met, perform the glue, otherwise, return False
 
 ```    
 Example:
@@ -100,12 +100,12 @@ longer_string  = aaaaabbcd
 
 # Thoughts on  Runtime
 
-Runtime is O(n^2\*k). Where n is the total number of segments and k is average length of the segment. The n^2 term comes from the all-pairs matching. The k comes from the Boyer-Moore string search. Perhaps the n^2 can be avoided if substrings were hashed and looked up. But since it's at least half of a substring that will match another string (not exactly half), this means all possible substrings more than half would need to be hashed. That's potentially n\*k hashes (or 5000, which is greater than n^2, where n=50). There might be ways to transform the string to a frequency domain and/or cluster/group the segments by similarity, but that is a little too advanced for the scope of this challenge. So currently, it doesn't seem that the n^2 term is avoidable. 
+Runtime is O(n^2\*k). Where n is the total number of segments and k is average length of the segment. The n^2 term comes from the all-pairs matching. The k comes from the Boyer-Moore string search. Perhaps the n^2 can be avoided if substrings were hashed and looked up. But since it's "more than" half of a substring that will match another string (not exactly half), this means all possible substrings more than half would need to be hashed. That's potentially n\*k hashes (or 5000, which is greater than n^2, where n=50). There might be ways to transform the string to a frequency domain and/or cluster and group the segments by similarity and only search through similar groups, but that is a little too advanced for the scope of this challenge. So currently, it doesn't seem that the n^2 term is avoidable. 
 
 
 # Explaination on other parts of the code
 
-* The `read_input` function reads the input file and concatenates lines and returns a list of sequences, it is called by the reconstruct function
-* The `reconstruct` function first calls the read_input funciton to get the list of sequences and then loops over the list of sequences in attempt to glue each sequence a growing master sequence. If there is a match and a glue is performed, the smaller sequence is removed from the list so it is not iterated against again, and the looping is restarted to find the next sequence that can be matched and glued to the mater sequence. The master sequence is initialized by taking one of the sequences in the list of sequences. 
+* The `read_input` function in `reconstruct.py` reads the input file and concatenates lines to return a list of sequences, it is called by the reconstruct function
+* The `reconstruct` function in `reconstruct.py` first calls the `read_input` function to get the list of sequences and then loops over the list while calling the `match_and_glue` function in each iteration in attempt to glue each sequence to a growing master sequence. If there is a match and a glue is performed, the smaller sequence is removed from the list so it won't be needlessly used again, and the looping is restarted to find the next sequence that can be matched and glued to the master sequence. The master sequence is initialized by taking one of the sequences in the list of sequences. 
 * `unit_test.py` currently just tests the match_and_glue function
-* `integrated_tests.py` tests whole input and outputs. Most of the tests make sure that all the inputs are seen in the output, as what is expected. 
+* `integrated_tests.py` tests whole input and outputs. Most of the tests make sure that all the inputs are seen in the output, as it should be

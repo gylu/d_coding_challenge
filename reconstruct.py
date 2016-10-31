@@ -113,7 +113,7 @@ def reconstruct(input_file):
 
 
 def main(args):
-    if sys.version_info < (3,1):
+    if sys.version_info < (3,0):
         print("Sorry, requires Python 3.x, not Python 2.x")
         sys.exit(1)        
     elif len(args)<2:

@@ -20,6 +20,38 @@ class Test_entire(unittest.TestCase):
             output=myfile.read()
         self.assertEqual(output,'ATTAGACCTGCCGGAATAC')
 
+    def test_simple_example_write_to_file2(self):
+        input_file='example_easy_data_set2.txt'
+        output_file="output_"+input_file
+        input_file=test_data_sets_folder+input_file
+        output_file=test_data_sets_folder+output_file
+        try:
+            os.remove(output_file)
+        except OSError:
+            pass
+        args=['', input_file, output_file]
+        reconstruct.main(args)
+        output=''
+        with open(output_file, 'r') as myfile:
+            output=myfile.read()
+        self.assertEqual(output,'xAAAAAAAAAAAAABBBBBCCCCCCCCCCxddx')
+
+    def test_simple_example_write_to_file3(self):
+        input_file='example_easy_data_set3.txt'
+        output_file="output_"+input_file
+        input_file=test_data_sets_folder+input_file
+        output_file=test_data_sets_folder+output_file
+        try:
+            os.remove(output_file)
+        except OSError:
+            pass
+        args=['', input_file, output_file]
+        reconstruct.main(args)
+        output=''
+        with open(output_file, 'r') as myfile:
+            output=myfile.read()
+        self.assertEqual(output,'xAAAAAAAAAAAAABBBBBCCCCCCCCCCxddx')
+
     def test_all_input_sequences_are_in_output_string(self):
         input_file='coding_challenge_data_set.txt'       
         output_file="output_"+input_file
@@ -176,6 +208,17 @@ class Test_entire(unittest.TestCase):
             output2=myfile.read()
         self.assertEqual(output1,output2)
 
+    def test_raises_exception_due_to_incorrect_input(self):
+        input_file='example_easy_data_set4.txt'
+        output_file="output_"+input_file
+        input_file=test_data_sets_folder+input_file
+        output_file=test_data_sets_folder+output_file
+        try:
+            os.remove(output_file)
+        except OSError:
+            pass
+        args=['', input_file, output_file]
+        self.assertRaises(Exception,reconstruct.main,args)
 
 if __name__ == '__main__':
     unittest.main()

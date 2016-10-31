@@ -78,7 +78,7 @@ Example:
 smaller_string =    aabbcde
 longer_string  = aaaaabbcd
 1. Get just more than half of aabbcdd: aabb
-    a) Is this piece inside the longer string?
+    a) Is this piece inside the longer string? If so, make note of where the match occured
         Yes, as shown:
            aabb
         aaaaabbcd
@@ -90,7 +90,7 @@ longer_string  = aaaaabbcd
         cde
     c) Remainder of smaller string up to same length as remainder of longer-string:
         cd (length=2)
-3. Perform the glue:
+3. Perform the glue starting at the location of where the match occured:
        aabbcde
     aaaaabbcd
     -----------

@@ -114,7 +114,10 @@ def reconstruct(input_file):
 
 
 def main(args):
-    if len(args)<2:
+    if sys.version_info < (3,1):
+        print("Sorry, requires Python 3.x, not Python 2.x")
+        sys.exit(1)        
+    elif len(args)<2:
         raise Exception("incorrect number of arguments. Example: python reconstruct.py <input_data_set.txt> [<output.txt>]")
     input_file=args[1]
     master_seq=reconstruct(input_file)

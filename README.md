@@ -1,6 +1,3 @@
-# George's d_coding_challenge
-
-
 # Usage
 
 To have output saved to a file:
@@ -106,4 +103,4 @@ longer_string  = aaaaabbcd
 
 # Runtime
 
-Runtime is O(n^2*k). Where n is the total number of segments, and k is average length of the segment. The n^2 term comes from the all-pairs matching. The k comes from the Boyer-Moore string search.
+Runtime is O(n^2*k). Where n is the total number of segments and k is average length of the segment. The n^2 term comes from the all-pairs matching. The k comes from the Boyer-Moore string search.

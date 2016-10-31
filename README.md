@@ -30,10 +30,9 @@ python integreated_tests.py
 * Output a unique sequence that contains each of the given input strings as a substring. Given the following inputs:
   * Total file size < 50 sequences
   * Each sequence <= 10000chars
-  * Some sequences will overlap with others for more than half their length
-* There exists a unique way to reconstruct the entire chromosome from these reads by gluing together pairs of reads that overlap by more than half their length
-* No guarentee that adjacent entries in the input file will have overlaps
-* Sequences are different lengths
+  * There exists a unique way to reconstruct the entire chromosome from these reads by gluing together pairs of reads that overlap by more than half their length
+  * No guarentee that adjacent entries in the input file will have overlaps
+  * Sequences are different lengths
 * Assumptions:
   * No two sequences will erroneously overlap with a third sequence. For example, the following is assumed to not ever happen: aabb, bbc, bbd (bbc and bbd are in contention)
   * All subsequences in the input file will get used
@@ -52,13 +51,7 @@ python integreated_tests.py
     Example output:
     ATTAGACCTGCCGGAATAC
 
-    Example of how to piece together the output
-    >Frag_56: ATTAGACCTG
-    >Frag_57:       CCTGCCGGAA
-    >Frag_58:    AGACCTGCCG
-    >Frag_59:          GCCGGAATAC
-
-    Building it in order
+    Example of overlapping and building the output:
     >Frag_56: ATTAGACCTG
     >Frag_58:    AGACCTGCCG
     >Frag_57:       CCTGCCGGAA
@@ -66,14 +59,15 @@ python integreated_tests.py
     output:   ATTAGACCTGCCGGAATAC
     ```
 
+
 # Initial thoughts:
 
 There are two problems here:
 
-1. String matching subproblem (see my reconstruct.match_and_glue() function
-  * Googling shows that Boyer-Moore seems to be the fastest string search algorithm. Futher googling showed that Cpython already implements this. https://hg.python.org/cpython/file/tip/Objects/stringlib/fastsearch.h
+1. String matching subproblem (See my `match_and_glue` function in reconstruct.py)
+  * Googling shows that Boyer-Moore seems to be the standard for efficient string search algorithms. Futher googling showed that Cpython already implements a variant of this (Boyer–Moore–Horspool), which results in an average run-time of O(k), where n is the length of the string to be searched against. See https://news.ycombinator.com/item?id=1976275. And https://hg.python.org/cpython/file/tip/Objects/stringlib/fastsearch.h
 
-2. All-pairs matching problem using string matching described above (see my reconstruct.reconstruct() function)
+2. All-pairs matching problem using string matching described above (See my `reconstruct` function in reconstruct.py)
   * Form a growing master sequence and keep gluing sequences into it
 
 
@@ -108,3 +102,8 @@ longer_string  = aaaaabbcd
     -----------
     aaaaabbcde
 ```   
+
+
+# Runtime
+
+Runtime is O(n^2*k). Where n is the total number of segments, and k is average length of the segment. The n^2 term comes from the all-pairs matching. The k comes from the Boyer-Moore string search.

@@ -5,7 +5,7 @@
 
 To have output saved to a file:
 ```
-python reconstruct.py `<folder_path/filename`> `<outputfilename.txt`>
+python reconstruct.py <folder_path/filename> <outputfilename.txt>
 e.g.
 python reconstruct.py test_data_sets/coding_challenge_data_set.txt output.txt
 ```
@@ -13,7 +13,7 @@ python reconstruct.py test_data_sets/coding_challenge_data_set.txt output.txt
 To directly print to screen and not write to any output files:
 
 ```
-python reconstruct.py `<folder_path/filename`>
+python reconstruct.py <folder_path/filename>
 e.g.
 python reconstruct.py test_data_sets/coding_challenge_data_set.txt
 ```

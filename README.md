@@ -48,7 +48,7 @@
 There are two problems here:
 
 1. String matching subproblem
-  * Doing some googling shows that Boyer-Moore seems to be the fastest string search algorithm. Futher googling showed that Cpython already implements this.
+  * Doing some googling shows that Boyer-Moore seems to be the fastest string search algorithm. Futher googling showed that Cpython already implements this. https://hg.python.org/cpython/file/tip/Objects/stringlib/fastsearch.h
 
 2. All-pairs matching problem using 1.
   * Two ways of attacking the problem:

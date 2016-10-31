@@ -1,5 +1,5 @@
 import unittest
-from main import match_and_glue
+from reconstruct import match_and_glue
 
 class TestMatchAndGlue(unittest.TestCase):
     def test_seq1_longer(self):

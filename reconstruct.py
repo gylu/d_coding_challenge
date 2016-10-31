@@ -2,24 +2,14 @@
 import sys
 import math
 import io
-#python's "substring in string" usage seems to be implemented in https://hg.python.org/cpython/file/tip/Objects/stringlib/fastsearch.h
-
-class subseq:
-    def __init__(self,name,input_file):
-        self.name=name
-        self.length=len(input_file)
-        self.seq=input_file
-        self.seq_for_head=None
-        self.index_of_other_seq_for_my_lefthead=None
-        self.seq_for_tail=None
-        self.index_of_other_seq_for_my_righttail=None
 
 
 def read_input(input_file):
     """
     INPUT: filename.txt
     OUTPUT: name_list, seq_list 
-    name_list has list of names of the sequences in the input file. seq_list has a list of the actual values
+    name_list has list of names of the sequences in the input file.  (e.g. >Rosalind_1836)
+    seq_list has a list of the actual values
     """
     allLines=''
     with open(input_file) as f:
@@ -50,9 +40,9 @@ def match_and_glue(seq1,seq2):
     OUTPUT: a glued output sequence. 
     Glue only occurs if more than half of one sequence overlaps with the other and there are additional new characters in the glued sequence
     This function attempts to match on both sides (left or right):
-        1. It takes the shorter of the two sequences, halves it and adds a character (to satisfy the "more than half"), and the sees if that half-character is in the longer string (CPython's substring in string check uses Boyer-Moore, which is one of the fastest string search algorithms)
-        2. If this substring is in the longer string, see if the remainder of the substring also overlaps
-        3. If it is, perform the glue
+        1. It takes one character more than half of the shorter of the two sequences (to satisfy the "more than half") and then sees if it is in the longer string
+        2. If this substring is in nose section or tail section longer string, see if the remainder of the substring also overlaps. I only check nose or tail section in order to save time. Nose and tail sizes are set to the length of the smaller substring. (It's pointless to check the middle of the longer substring to see if there are matches if a match doesn't result in growing the strings)
+        3. If the remaining substring also matches, the glue them together
         See readme.md on github for more detail
     """
     if len(seq1)<len(seq2):
@@ -91,24 +81,23 @@ def match_and_glue(seq1,seq2):
 
 
 def reconstruct(input_file):
-    # input_file='coding_challenge_data_set.txt'
-    # input_file='example_easy_data_set.txt'
-    # myDict={}
-    # for seq_name, seq_value in zip(name_list,seq_list):
-    #     myDict[seq_name]={'value':seq_value}
-    #     myDict[seq_name]["length"]=len(seq_value)
+    """
+    INPUT: file path with filename to the input file.
+    OUTPUT: a glued output sequence
+    """
     name_list,seq_list=read_input(input_file)
+    master_seq=''
     master_seq=seq_list.pop()
-    max_loops=1+(len(seq_list)*(len(seq_list)+1) )/2 #esentially n*(n+1)/2 loops
+    max_loops=1+(len(seq_list)*(len(seq_list)+1) )/2 #esentially n*(n+1)/2 loops, only allow this amount of loops to run
     count=0
     loops_total=0
     while seq_list:
         if loops_total < max_loops:
             seq=seq_list[count]
             result=match_and_glue(master_seq,seq)
-            count+=1
+            count+=1 #count is used to loop through all of the remaining subsequences that haven't yet been glued
             if result:
-                count=0 #basically same as doing a mod
+                count=0 #if a matching subsequence was found, remove it from the list, and start over with finding the next match
                 seq_list.remove(seq)
                 master_seq=result
         else:

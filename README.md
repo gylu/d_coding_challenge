@@ -57,19 +57,19 @@ python integreated_tests.py
     ```
 
 
-# Initial thoughts:
+# Overview of solution
 
 There are two problems here:
 
 1. String matching subproblem (See my `match_and_glue` function in reconstruct.py)
-  * Googling shows that Boyer-Moore seems to be the standard for efficient string search algorithms. Futher googling showed that Cpython already implements a variant of this (Boyer–Moore–Horspool), which results in an average run-time of O(k), where n is the length of the string to be searched against. See https://news.ycombinator.com/item?id=1976275. And https://hg.python.org/cpython/file/tip/Objects/stringlib/fastsearch.h
+  * Googling shows that Boyer-Moore seems to be the standard for efficient string search algorithms. Futher googling showed that Cpython already implements a variant of this (Boyer–Moore–Horspool), which results in an average run-time of O(k), where k is the length of the string to be searched against. See https://news.ycombinator.com/item?id=1976275. And https://hg.python.org/cpython/file/tip/Objects/stringlib/fastsearch.h
 
 2. All-pairs matching problem using string matching described above (See my `reconstruct` function in reconstruct.py)
   * Form a growing master sequence and keep gluing sequences into it
 
 
 
-# What my `match_and_glue` function does:
+# What my `match_and_glue` function does
 This function attempts to match two sequences, on both sides (left or right):
 
 1. It takes one character more than half of the shorter of the two sequences (to satisfy the "more than half") and then sees if it is in the longer string (CPython's "substring in string" check uses Boyer-Moore, which is best case Ω(n/m), worst case O(mn))

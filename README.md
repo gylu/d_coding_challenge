@@ -4,24 +4,23 @@ Python 3 is used.
 
 To have output saved to a file:
 ```
-python reconstruct.py <folder_path/filename> <outputfilename.txt>
+python3 reconstruct.py <folder_path/filename> <outputfilename.txt>
 e.g.
-python reconstruct.py test_data_sets/coding_challenge_data_set.txt output.txt
+python3 reconstruct.py test_data_sets/coding_challenge_data_set.txt output.txt
 ```
 
 To directly print to screen and not write to any output files:
-
 ```
-python reconstruct.py <folder_path/filename>
+python3 reconstruct.py <folder_path/filename>
 e.g.
-python reconstruct.py test_data_sets/coding_challenge_data_set.txt
+python3 reconstruct.py test_data_sets/coding_challenge_data_set.txt
 ```
 
 To run tests:
 ```
-python unit_test.py
+python3 unit_test.py
 or
-python integreated_tests.py
+python3 integreated_tests.py
 ```
 
 # Requirements

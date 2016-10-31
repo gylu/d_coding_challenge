@@ -1,5 +1,7 @@
 # Usage
 
+Python 3 is used.
+
 To have output saved to a file:
 ```
 python reconstruct.py <folder_path/filename> <outputfilename.txt>

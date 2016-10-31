@@ -58,11 +58,11 @@ def match_and_glue(seq1,seq2):
     temp=False
     if substr_lefthalf in other_seq[len(other_seq)-len_small_seq:]: #check the lefthalf of the small string against the right side of long string, up to the length of the small sequence. Checking for the tail ends instead of the whole string seems to save about 40% of time
         len_substr=len(substr_lefthalf)
-        head_index=other_seq.index(substr_lefthalf)
-        remainder_other_seq=other_seq[head_index+len_substr::]
+        head_index=other_seq.index(substr_lefthalf) #this is the index on the longer string at which the first char of the small substring landed
+        remainder_other_seq=other_seq[head_index+len_substr::] #get the remainder of the longer string
         len_remainder_other_seq=len(remainder_other_seq)
-        remainder_substr=small_seq[len_substr:len_substr+len_remainder_other_seq] #this is the remainder of the string that fits with the remainder of the other sequence
-        if (remainder_substr==remainder_other_seq) and len_remainder_other_seq < len_small_seq-len_substr: #the second condition checks that the reaminder of the long string is shorter than the remainder of the smaller string, ensuring there is new characters that will be added
+        remainder_substr=small_seq[len_substr:len_substr+len_remainder_other_seq] #this is the remainder of the smaller string that fits with the remainder of the longer sequence
+        if (remainder_substr==remainder_other_seq) and len_remainder_other_seq < len_small_seq-len_substr: #the second condition checks that the remainder of the long string is shorter than the remainder of the smaller string, ensuring there is new characters that will be added
             remainder_small_seq=small_seq[len_substr+len_remainder_other_seq::]
             temp=''.join([other_seq,remainder_small_seq])
     elif substr_righthalf in other_seq[0:len_small_seq]: #same as above, except try matching the right side of the shorter string against the left side of the long string
@@ -95,10 +95,10 @@ def reconstruct(input_file):
     list_index=0
     loops_total=0
     while seq_list:
-        if loops_total < max_loops and list_index < len_seq_list:
+        if loops_total < max_loops and list_index < len_seq_list: #check that it's not looping forever, and that it's not overshooting the list size
             seq=seq_list[list_index]
             result=match_and_glue(master_seq,seq)
-            list_index+=1 #list_index is used to loop through all of the remaining subsequences that haven't yet been glued
+            list_index+=1 #list_index is used to loop through all of the remaining subsequences that haven't yet been glued. If we've looped through it once and have not found a match (result=False still), then there is something wrong because the master sequence can't pair with anything in our list
             if result:
                 list_index=0 #if a matching subsequence was found, remove it from the list, and start over with finding the next match
                 seq_list.remove(seq)
@@ -114,6 +114,8 @@ def reconstruct(input_file):
 
 
 def main(args):
+    if len(args)<2:
+        raise Exception("incorrect number of arguments. Example: python reconstruct.py <input_data_set.txt> [<output.txt>]")
     input_file=args[1]
     master_seq=reconstruct(input_file)
     if len(args)>2: #if 2 arguments were given in the commnand line, such as "python reconstruct.py arg1 arg2" then treat arg2 as the filename to write output to

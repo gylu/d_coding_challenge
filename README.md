@@ -20,7 +20,7 @@ To run tests:
 ```
 python3 unit_test.py
 or
-python3 integreated_tests.py
+python3 integrated_tests.py
 ```
 
 # Requirements

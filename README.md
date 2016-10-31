@@ -100,7 +100,7 @@ longer_string  = aaaaabbcd
 
 # Thoughts on  Runtime
 
-Runtime is O(n`^2*k). Where n is the total number of segments and k is average length of the segment. The n`^2 term comes from the all-pairs matching. The k comes from the Boyer-Moore string search. Perhaps the n`^2 can be avoided if substrings were hashed and looked up. But since it's at least half of a substring that will match another string (not exactly half), this means all possible substrings more than half would need to be hashed. That's potentially n*(k) hashes (or 5000, which is greater than n`^2, where n=50). There might be ways to transform the string to a frequency domain and/or cluster/group the segments by similarity, but that is a little too advanced for the scope of this challenge. So currently, it doesn't seem that the n`^2 term is avoidable. 
+Runtime is O(n`^`2*k). Where n is the total number of segments and k is average length of the segment. The n`^2 term comes from the all-pairs matching. The k comes from the Boyer-Moore string search. Perhaps the n`^2 can be avoided if substrings were hashed and looked up. But since it's at least half of a substring that will match another string (not exactly half), this means all possible substrings more than half would need to be hashed. That's potentially n*(k) hashes (or 5000, which is greater than n`^2, where n=50). There might be ways to transform the string to a frequency domain and/or cluster/group the segments by similarity, but that is a little too advanced for the scope of this challenge. So currently, it doesn't seem that the n`^2 term is avoidable. 
 
 
 # Explaination on other parts of the code

@@ -7,12 +7,13 @@ class Test_entire(unittest.TestCase):
     def test_simple_example_write_to_file(self):
         input_file='example_easy_data_set.txt'
         output_file="output_"+input_file
-        input_path=test_data_sets_folder+input_file
+        input_file=test_data_sets_folder+input_file
+        output_file=test_data_sets_folder+output_file
         try:
             os.remove(output_file)
         except OSError:
             pass
-        args=['', input_path, output_file]
+        args=['', input_file, output_file]
         reconstruct.main(args)
         output=''
         with open(output_file, 'r') as myfile:
@@ -22,14 +23,15 @@ class Test_entire(unittest.TestCase):
     def test_all_inputs_are_in_output_string(self):
         input_file='coding_challenge_data_set.txt'       
         output_file="output_"+input_file
-        input_path=test_data_sets_folder+input_file
+        input_file=test_data_sets_folder+input_file
+        output_file=test_data_sets_folder+output_file
         try:
             os.remove(output_file)
         except OSError:
             pass
-        args=['',input_path, output_file]
+        args=['',input_file, output_file]
         print("args: ", args)
-        name_list,seq_list=reconstruct.read_input(input_path) 
+        name_list,seq_list=reconstruct.read_input(input_file) 
         reconstruct.main(args)
         output=''
         with open(output_file, 'r') as myfile:
@@ -43,15 +45,16 @@ class Test_entire(unittest.TestCase):
     def test_all_rows_are_in_output_string(self):
         input_file='coding_challenge_data_set.txt'       
         output_file="output_"+input_file
-        input_path=test_data_sets_folder+input_file
+        input_file=test_data_sets_folder+input_file
+        output_file=test_data_sets_folder+output_file
         try:
             os.remove(output_file)
         except OSError:
             pass
-        args=['',input_path, output_file]
+        args=['',input_file, output_file]
         print("args: ", args)
         all_lines=[]
-        with open(input_path) as f:
+        with open(input_file) as f:
             for line in f:
                 all_lines.append(line.replace('\n', ''))
         reconstruct.main(args)
@@ -66,18 +69,45 @@ class Test_entire(unittest.TestCase):
                 self.assertIn(line,output)
             print("subseq_num: ", count, ". subseq: ", line)
 
-
-    def test_all_inputs_are_in_output_string_in_order(self):
-        input_file='in_order_easy_data_set.txt'       
+    def test_all_rows_are_in_output_string(self):
+        input_file='coding_challenge_data_set_reordered.txt'       
         output_file="output_"+input_file
-        input_path=test_data_sets_folder+input_file
+        input_file=test_data_sets_folder+input_file
+        output_file=test_data_sets_folder+output_file
         try:
             os.remove(output_file)
         except OSError:
             pass
-        args=['',input_path, output_file]
+        args=['',input_file, output_file]
         print("args: ", args)
-        name_list,seq_list=reconstruct.read_input(input_path) 
+        all_lines=[]
+        with open(input_file) as f:
+            for line in f:
+                all_lines.append(line.replace('\n', ''))
+        reconstruct.main(args)
+        output=''
+        with open(output_file, 'r') as myfile:
+            output=myfile.read().replace('\n', '')
+        count=0   
+        for line in all_lines:
+            if line.startswith('>'):
+                count+=1
+            else:
+                self.assertIn(line,output)
+            print("subseq_num: ", count, ". subseq: ", line)
+
+    def test_all_inputs_are_in_output_string_in_order(self):
+        input_file='in_order_easy_data_set.txt'       
+        output_file="output_"+input_file
+        input_file=test_data_sets_folder+input_file
+        output_file=test_data_sets_folder+output_file
+        try:
+            os.remove(output_file)
+        except OSError:
+            pass
+        args=['',input_file, output_file]
+        print("args: ", args)
+        name_list,seq_list=reconstruct.read_input(input_file) 
         reconstruct.main(args)
         output=''
         with open(output_file, 'r') as myfile:

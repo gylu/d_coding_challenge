@@ -48,7 +48,7 @@ def match_and_glue(seq1,seq2):
     """
     INPUT: two sequences
     OUTPUT: a glued output sequence. 
-    Glue only occurs if more than half of one sequence overlaps with the other, and there are additional new characters in the glued sequence
+    Glue only occurs if more than half of one sequence overlaps with the other and there are additional new characters in the glued sequence
     This function attempts to match on both sides (left or right):
         1. It takes the shorter of the two sequences, halves it and adds a character (to satisfy the "more than half"), and the sees if that half-character is in the longer string (CPython's substring in string check uses Boyer-Moore, which is one of the fastest string search algorithms)
         2. If this substring is in the longer string, see if the remainder of the substring also overlaps
@@ -61,10 +61,11 @@ def match_and_glue(seq1,seq2):
     else:
         small_seq=seq2
         other_seq=seq1
+    len_small_seq=len(small_seq)
     substr_lefthalf=small_seq[0:len(small_seq)//2+1] #get substring that's the first half of the string plus one more character
     substr_righthalf=small_seq[math.ceil(len(small_seq)/2)-1::]
     temp=False
-    if substr_lefthalf in other_seq: #todo, update to check only the rightmost 1000 chars
+    if substr_lefthalf in other_seq[len(other_seq)-len_small_seq:]: #check only the rightmost characters up to the length of the small sequence. Checking for the tail ends instead of the whole string seems to save about 40% of time
         len_substr=len(substr_lefthalf)
         head_index=other_seq.index(substr_lefthalf)
         remainder_other_seq=other_seq[head_index+len_substr::]
@@ -75,7 +76,7 @@ def match_and_glue(seq1,seq2):
         if (remainder_substr==remainder_other_seq):
             remainder_small_seq=small_seq[len_substr+len_remainder_other_seq::]
             temp=''.join([other_seq,remainder_small_seq])
-    elif substr_righthalf in other_seq: #same as above, except try matching the right side of the shorter string against the left side of the long string
+    elif substr_righthalf in other_seq[0:len_small_seq]: #same as above, except try matching the right side of the shorter string against the left side of the long string
         len_substr=len(substr_righthalf)
         head_index=other_seq.index(substr_righthalf)
         remainder_other_seq=other_seq[0:head_index]
@@ -97,22 +98,23 @@ def reconstruct(input_file):
     #     myDict[seq_name]={'value':seq_value}
     #     myDict[seq_name]["length"]=len(seq_value)
     name_list,seq_list=read_input(input_file)
-    reverse_order=[]
-    #reverse_order.append(name_list.pop())
     master_seq=seq_list.pop()
-    max_loops=len(seq_list) * (len(seq_list))/2
+    max_loops=1+(len(seq_list)*(len(seq_list)+1) )/2 #esentially n*(n+1)/2 loops
     count=0
-    loopsTotal=0
+    loops_total=0
     while seq_list:
-        seq=seq_list[count]
-        result=match_and_glue(master_seq,seq)
-        count+=1
-        loopsTotal+=1
-        #print(loopsTotal)
-        if result:
-            count=0
-            seq_list.remove(seq)
-            master_seq=result        
+        if loops_total < max_loops:
+            seq=seq_list[count]
+            result=match_and_glue(master_seq,seq)
+            count+=1
+            if result:
+                count=0 #basically same as doing a mod
+                seq_list.remove(seq)
+                master_seq=result
+        else:
+            raise Exception("Exceeded number of expected iterations required to find solution. Iterations ran: ", loops_total)
+        loops_total+=1
+        #print("loops_total: ",loops_total)
     return master_seq
 
 
@@ -129,5 +131,5 @@ if __name__=="__main__":
     args=sys.argv
     main(args)
 
-#python main.py example_easy_data_set.txt
-#python main.py coding_challenge_data_set.txt
+#python reconstruct.py test_data_sets/example_easy_data_set.txt
+#python reconstruct.py test_data_sets/coding_challenge_data_set.txt

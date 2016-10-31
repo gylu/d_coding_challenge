@@ -1,6 +1,26 @@
 # George's d_coding_challenge
 
 
+# Usage
+
+```
+To have output saved to a file:
+python reconstruct.py `<folder_path/filename`> `<outputfilename.txt`>
+e.g.
+python reconstruct.py test_data_sets/coding_challenge_data_set.txt output.txt
+
+To directly print to screen and not write to any output files:
+
+python reconstruct.py `<folder_path/filename`>
+e.g.
+python reconstruct.py test_data_sets/coding_challenge_data_set.txt
+
+
+To run tests:
+python unit_test.py
+
+python integreated_tests.py
+```
 
 # Requirements
 
@@ -47,32 +67,32 @@
 
 There are two problems here:
 
-1. String matching subproblem
-  * Doing some googling shows that Boyer-Moore seems to be the fastest string search algorithm. Futher googling showed that Cpython already implements this. https://hg.python.org/cpython/file/tip/Objects/stringlib/fastsearch.h
+1. String matching subproblem (see my reconstruct.match_and_glue() function
+  * Googling shows that Boyer-Moore seems to be the fastest string search algorithm. Futher googling showed that Cpython already implements this. https://hg.python.org/cpython/file/tip/Objects/stringlib/fastsearch.h
 
-2. All-pairs matching problem using 1.
-  * Two ways of attacking the problem:
-    * Form a growing master sequence and keep gluing sequences into it
-    * Keep taking pairs and merging them (then only further merging with previously paired/merged), this won't work, because won't be able to determine whether it's 50% that matches or not
+2. All-pairs matching problem using string matching described above (see my reconstruct.reconstruct() function)
+  * Form a growing master sequence and keep gluing sequences into it
+
 
 
 # What my `match_and_glue` function does:
-This function attempts to match on both sides (left or right):
+This function attempts to match two sequences, on both sides (left or right):
 
-1. It takes the shorter of the two sequences, halves it and adds a character (to satisfy the "more than half"), and the sees if that half-character is in the longer string (CPython's substring in string check uses Boyer-Moore, which is one of the fastest string search algorithms)
-2. If this substring is in the longer string, see if the remainder of the substring also overlaps
-3. If it is, perform the glue
+1. It takes one character more than half of the shorter of the two sequences (to satisfy the "more than half") and then sees if it is in the longer string (CPython's "substring in string" check uses Boyer-Moore, which is best case Ω(n/m), worst case O(mn))
+2. If this substring is in nose section or tail section longer string, see if the remainder of the substring also overlaps. I only check nose or tail section in order to save time. Nose and tail sizes are set to the length of the smaller substring. (It's pointless to check the middle of the longer substring to see if there are matches if a match doesn't result in growing the strings)
+3. If it does, perform the glue
 
 ```    
 Example:
-smaller_string = aabbcde
+smaller_string =    aabbcde
 longer_string  = aaaaabbcd
-1. more than half of aabbcdd = aabb
-    a) Is this more-than-half of inside the longer string?
+1. Get just more than half of aabbcdd: aabb
+    a) Is this piece inside the longer string?
         Yes, as shown:
            aabb
         aaaaabbcd
-2. Is the remainder of the substring also there
+2. Is the remainder of the smaller substring also there?
+    Yes:
     a) remainder-of-longer-string: 
         cd (length = 2)
     b) reaminder of smaller string 

@@ -17,10 +17,10 @@ class Test_entire(unittest.TestCase):
         reconstruct.main(args)
         output=''
         with open(output_file, 'r') as myfile:
-            output=myfile.read().replace('\n', '')
+            output=myfile.read()
         self.assertEqual(output,'ATTAGACCTGCCGGAATAC')
 
-    def test_all_inputs_are_in_output_string(self):
+    def test_all_input_sequences_are_in_output_string(self):
         input_file='coding_challenge_data_set.txt'       
         output_file="output_"+input_file
         input_file=test_data_sets_folder+input_file
@@ -35,14 +35,36 @@ class Test_entire(unittest.TestCase):
         reconstruct.main(args)
         output=''
         with open(output_file, 'r') as myfile:
-            output=myfile.read().replace('\n', '')
+            output=myfile.read()
         count=0   
         for seq in seq_list:
             count+=1
             print("count: ", count, ". seq: ", seq)
             self.assertIn(seq,output)
 
-    def test_all_rows_are_in_output_string(self):
+    def test_all_input_sequences_are_in_output_string2(self):
+        input_file='in_order_easy_data_set.txt'       
+        output_file="output_"+input_file
+        input_file=test_data_sets_folder+input_file
+        output_file=test_data_sets_folder+output_file
+        try:
+            os.remove(output_file)
+        except OSError:
+            pass
+        args=['',input_file, output_file]
+        print("args: ", args)
+        name_list,seq_list=reconstruct.read_input(input_file) 
+        reconstruct.main(args)
+        output=''
+        with open(output_file, 'r') as myfile:
+            output=myfile.read()
+        count=0   
+        for seq in seq_list:
+            count+=1
+            print("count: ", count, ". seq: ", seq)
+            self.assertIn(seq,output)
+
+    def test_all_input_rows_are_in_output_string(self):
         input_file='coding_challenge_data_set.txt'       
         output_file="output_"+input_file
         input_file=test_data_sets_folder+input_file
@@ -60,7 +82,7 @@ class Test_entire(unittest.TestCase):
         reconstruct.main(args)
         output=''
         with open(output_file, 'r') as myfile:
-            output=myfile.read().replace('\n', '')
+            output=myfile.read()
         count=0   
         for line in all_lines:
             if line.startswith('>'):
@@ -69,7 +91,7 @@ class Test_entire(unittest.TestCase):
                 self.assertIn(line,output)
             print("subseq_num: ", count, ". subseq: ", line)
 
-    def test_all_rows_are_in_output_string(self):
+    def test_all_input_rows_are_in_output_string2(self):
         input_file='coding_challenge_data_set_reordered.txt'       
         output_file="output_"+input_file
         input_file=test_data_sets_folder+input_file
@@ -87,7 +109,7 @@ class Test_entire(unittest.TestCase):
         reconstruct.main(args)
         output=''
         with open(output_file, 'r') as myfile:
-            output=myfile.read().replace('\n', '')
+            output=myfile.read()
         count=0   
         for line in all_lines:
             if line.startswith('>'):
@@ -95,29 +117,65 @@ class Test_entire(unittest.TestCase):
             else:
                 self.assertIn(line,output)
             print("subseq_num: ", count, ". subseq: ", line)
-
-    def test_all_inputs_are_in_output_string_in_order(self):
-        input_file='in_order_easy_data_set.txt'       
-        output_file="output_"+input_file
-        input_file=test_data_sets_folder+input_file
-        output_file=test_data_sets_folder+output_file
+ 
+    def test_different_order_inputs_result_in_same_output(self):
+        input_file1='coding_challenge_data_set.txt'       
+        output_file1="output_"+input_file1
+        input_file1=test_data_sets_folder+input_file1
+        output_file1=test_data_sets_folder+output_file1
+        input_file2='coding_challenge_data_set_reordered.txt'       
+        output_file2="output_"+input_file2
+        input_file2=test_data_sets_folder+input_file2
+        output_file2=test_data_sets_folder+output_file2
         try:
-            os.remove(output_file)
+            os.remove(output_file1)
+            os.remove(output_file2)
         except OSError:
             pass
-        args=['',input_file, output_file]
-        print("args: ", args)
-        name_list,seq_list=reconstruct.read_input(input_file) 
-        reconstruct.main(args)
-        output=''
-        with open(output_file, 'r') as myfile:
-            output=myfile.read().replace('\n', '')
-        count=0   
-        for seq in seq_list:
-            count+=1
-            print("count: ", count, ". seq: ", seq)
-            self.assertIn(seq,output)
- 
+        args1=['',input_file1, output_file1]
+        args2=['',input_file2, output_file2]
+        print("args1: ", args1)
+        print("args2: ", args2)
+        reconstruct.main(args1)
+        reconstruct.main(args2)
+        output1='a'
+        output2='b'
+        with open(output_file1, 'r') as myfile:
+            output1=myfile.read()
+        output2=''
+        with open(output_file2, 'r') as myfile:
+            output2=myfile.read()
+        self.assertEqual(output1,output2)
+
+    def test_different_ordered_inputs_result_in_same_output2(self):
+        input_file1='in_order_easy_data_set.txt'       
+        output_file1="output_"+input_file1
+        input_file1=test_data_sets_folder+input_file1
+        output_file1=test_data_sets_folder+output_file1
+        input_file2='example_easy_data_set.txt'       
+        output_file2="output_"+input_file2
+        input_file2=test_data_sets_folder+input_file2
+        output_file2=test_data_sets_folder+output_file2
+        try:
+            os.remove(output_file1)
+            os.remove(output_file2)
+        except OSError:
+            pass
+        args1=['',input_file1, output_file1]
+        args2=['',input_file2, output_file2]
+        print("args1: ", args1)
+        print("args2: ", args2)
+        reconstruct.main(args1)
+        reconstruct.main(args2)
+        output1='a'
+        output2='b'
+        with open(output_file1, 'r') as myfile:
+            output1=myfile.read()
+        output2=''
+        with open(output_file2, 'r') as myfile:
+            output2=myfile.read()
+        self.assertEqual(output1,output2)
+
 
 if __name__ == '__main__':
     unittest.main()
